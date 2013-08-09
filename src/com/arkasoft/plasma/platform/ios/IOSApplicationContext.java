@@ -30,6 +30,12 @@ public class IOSApplicationContext extends ApplicationContext {
 	private IOSApplicationContext() {
 		// nothing
 	}
+	
+   @Override
+   protected void runEventLoop() {
+      // TODO Auto-generated method stub
+      
+   }
 
 	@Override
 	protected void runAsync(Runnable runnable) {
