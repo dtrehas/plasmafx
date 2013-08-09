@@ -1,6 +1,4 @@
-package com.arkasoft.plasma.demo;
-
-import com.arkasoft.plasma.ui.swt.SWTApplicationContext;
+package com.arkasoft.plasma.ui.swt;
 
 import plasma.application.Application;
 import plasma.scene.Scene;
