@@ -70,7 +70,7 @@ public abstract class ApplicationContext {
       }
    }
 
-   protected void callApplicationInit() {
+   private void callApplicationInit() {
       try {
          // Call the application init method (on the Launcher thread)
          application.init();
@@ -80,7 +80,9 @@ public abstract class ApplicationContext {
       }
    }
 
-   protected void callApplicationStart() {
+   protected abstract void runEventLoop();
+
+   private void callApplicationStart() {
       try {
          // Create primary stage and call application start method
          final Stage primaryStage = new Stage(true);
@@ -92,8 +94,6 @@ public abstract class ApplicationContext {
       }
    }
 
-   protected abstract void runEventLoop();
-
    protected void callApplicationStop() {
       try {
          // Call Application stop method
@@ -103,7 +103,7 @@ public abstract class ApplicationContext {
          t.printStackTrace();
       }
    }
-   
+
    /**
     * Causes the {@code run()} method of the runnable to be invoked by the
     * user-interface thread at the next reasonable opportunity. The caller of
@@ -138,7 +138,7 @@ public abstract class ApplicationContext {
     * @return
     */
    public abstract ScenePeer createScenePeer();
-   
+
    /**
     * 
     * @return

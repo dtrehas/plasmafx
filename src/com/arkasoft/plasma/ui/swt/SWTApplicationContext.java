@@ -39,10 +39,9 @@ public class SWTApplicationContext extends ApplicationContext {
    }
 
    private SWTWindow primaryStagePeer = null;
-
+   
    @Override
-   protected void callApplicationStart() {
-      super.callApplicationStart();
+   protected void runEventLoop() {
       if (primaryStagePeer != null && primaryStagePeer.isVisible()) {
          Display display = Display.getDefault();
          while (!primaryStagePeer.shell.isDisposed()) {
@@ -85,7 +84,5 @@ public class SWTApplicationContext extends ApplicationContext {
       // TODO Auto-generated method stub
       return null;
    }
-
-
 
 }
