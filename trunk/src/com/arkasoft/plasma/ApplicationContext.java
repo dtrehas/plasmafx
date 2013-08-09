@@ -27,7 +27,7 @@ public abstract class ApplicationContext {
    // Ensure that launchApplication method is only called once
    private AtomicBoolean launchCalled = new AtomicBoolean(false);
 
-   protected void launchApplication(final Class<? extends Application> applicationClass, final String... applicationArgs) {
+   protected final void launchApplication(final Class<? extends Application> applicationClass, final String... applicationArgs) {
       if (launchCalled.getAndSet(true)) {
          throw new IllegalStateException("Application launch must not be called more than once");
       }

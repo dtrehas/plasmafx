@@ -33,10 +33,7 @@ public class SWTApplicationContext extends ApplicationContext {
       // nothing
    }
 
-   @Override
-   protected final void launchApplication(final Class<? extends Application> applicationClass, final String... applicationArgs) {
-      super.launchApplication(applicationClass, applicationArgs);
-   }
+
 
    private SWTWindow primaryStagePeer = null;
    
