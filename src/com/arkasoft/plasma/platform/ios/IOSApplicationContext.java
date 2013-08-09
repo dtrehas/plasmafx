@@ -1,4 +1,4 @@
-package com.arkasoft.plasma.ui.ios;
+package com.arkasoft.plasma.platform.ios;
 
 import plasma.application.Application;
 import plasma.stage.StageStyle;

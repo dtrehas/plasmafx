@@ -1,4 +1,4 @@
-package com.arkasoft.plasma.ui.swt;
+package com.arkasoft.plasma.platform.swt;
 
 import org.eclipse.swt.widgets.Display;
 
