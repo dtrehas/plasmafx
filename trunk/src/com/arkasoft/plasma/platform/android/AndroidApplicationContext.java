@@ -1,4 +1,4 @@
-package com.arkasoft.plasma.ui.android;
+package com.arkasoft.plasma.platform.android;
 
 import com.arkasoft.plasma.ApplicationContext;
 
