@@ -3,6 +3,7 @@ package plasma.stage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import plasma.beans.Property;
+import plasma.scene.Scene;
 
 import com.arkasoft.plasma.ApplicationContext;
 import com.arkasoft.plasma.ui.StagePeerListener;
@@ -17,7 +18,7 @@ public class Stage extends Window {
    // Ensure that launchApplication method is only called once
    private static AtomicBoolean primaryStage = new AtomicBoolean(false);
 
-   private final class MyStagePeerListener implements StagePeerListener {
+   private final class StagePeerListenerImpl implements StagePeerListener {
       @Override
       public void changedLocation(float x, float y) {
          System.out.println(">>> changedLocation: " + x + ", " + y);
@@ -70,7 +71,6 @@ public class Stage extends Window {
 
    public Stage(boolean primaryStage) {
       this(StageStyle.DECORATED, primaryStage);
-
    }
 
    public Stage(StageStyle style, boolean primaryStage) {
@@ -86,6 +86,11 @@ public class Stage extends Window {
       // ApplicationContext.getInstance().checkUserThread();
 
       initStyle(style);
+   }
+
+   @Override
+   public final void setScene(Scene value) {
+      super.setScene(value);
    }
 
    /**
@@ -169,8 +174,8 @@ public class Stage extends Window {
          title = new StageProperty<String>(null) {
             @Override
             protected void invalidated() {
-               if (_peer != null) {
-                  _peer.setTitle(getValue());
+               if (impl_peer != null) {
+                  impl_peer.setTitle(getValue());
                }
             }
 
@@ -183,24 +188,33 @@ public class Stage extends Window {
       return title;
    }
 
+   /**
+    * 
+    * @deprecated This is an internal API that is not intended for use and will
+    *             be removed in the next version
+    */
    @Override
-   protected void _visibleChanging(boolean value) {
-      super._visibleChanging(value);
-      if (value && (_peer == null)) {
-         _peer = ApplicationContext.getInstance().createStagePeer(getStyle(), isPrimary() /* TODO */);
+   protected void impl_visibleChanging(boolean value) {
+      super.impl_visibleChanging(value);
+      if (value && (impl_peer == null)) {
+         // Setup the peer
+         // TODO
+
+         impl_peer = ApplicationContext.getInstance().createStagePeer(getStyle(), isPrimary() /* TODO */);
          if (peerListener == null) {
-            peerListener = new MyStagePeerListener();
+            peerListener = new StagePeerListenerImpl();
          }
       }
    }
 
+   @SuppressWarnings("deprecation")
    @Override
-   protected void _visibleChanged(boolean value) {
-      super._visibleChanged(value);
+   protected void impl_visibleChanged(boolean value) {
+      super.impl_visibleChanged(value);
 
       if (value) {
          // finish initialization
-         _peer.setTitle(getTitle());
+         impl_peer.setTitle(getTitle());
 
       } else {
 

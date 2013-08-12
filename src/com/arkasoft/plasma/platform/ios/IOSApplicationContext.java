@@ -1,15 +1,12 @@
 package com.arkasoft.plasma.platform.ios;
 
-import org.robovm.cocoatouch.uikit.UIApplication;
-import org.robovm.objc.ObjCRuntime;
-import org.robovm.objc.Selector;
-import org.robovm.rt.VM;
+import org.robovm.cocoatouch.foundation.NSRunLoop;
 
 import plasma.application.Application;
 import plasma.stage.StageStyle;
 
 import com.arkasoft.plasma.ApplicationContext;
-import com.arkasoft.plasma.ui.NodePeer;
+import com.arkasoft.plasma.ui.GroupPeer;
 import com.arkasoft.plasma.ui.ScenePeer;
 import com.arkasoft.plasma.ui.StagePeer;
 
@@ -25,54 +22,69 @@ public class IOSApplicationContext extends ApplicationContext {
     * @param applicationArgs
     *           the command line arguments passed to the application.
     */
-   public static void launch(IOSApplicationDelegate appDelegate, final Class<? extends Application> applicationClass, final String... applicationArgs) {
+   public static void launch(final Class<? extends Application> applicationClass, final String... applicationArgs) {
       assert ApplicationContext.instance == null : "ApplicationContext already initialized";
-      IOSApplicationContext appContext = new IOSApplicationContext(appDelegate);
+      IOSApplicationContext appContext = new IOSApplicationContext();
       ApplicationContext.instance = appContext;
       appContext.launchApplication(applicationClass, applicationArgs);
    }
 
-   private final IOSApplicationDelegate appDelegate;
+   private IOSWindow primaryStagePeer = null;
 
-   private Thread dispatchThread;
+   private IOSApplicationContext() {
+      // nothing
+   }
 
-   private IOSApplicationContext(IOSApplicationDelegate appDelegate) {
-      this.appDelegate = appDelegate;
+   @Override
+   public boolean isUserThread() {
+      return NSRunLoop.getCurrent() == NSRunLoop.getMain();
    }
 
    @Override
    protected void runEventLoop() {
-
+      if (primaryStagePeer != null && primaryStagePeer.isVisible()) {
+         primaryStagePeer.window.makeKeyWindow();
+      }
    }
 
    @Override
-   protected void runAsync(Runnable runnable) {
+   protected final void callApplicationStop() {
+      // do nothing
+   }
+
+   final void _callApplicationStop() {
+      super.callApplicationStop();
+   }
+
+   @Override
+   protected void invokeLater(Runnable runnable) {
       IOSRunnable r = new IOSRunnable(runnable);
       r.performOnMainThread(false);
    }
 
    @Override
-   protected void syncExec(Runnable runnable) {
+   protected void invokeAndWait(Runnable runnable) {
       IOSRunnable r = new IOSRunnable(runnable);
       r.performOnMainThread(true);
    }
 
    @Override
    public StagePeer createStagePeer(StageStyle style, boolean primary) {
-      // TODO Auto-generated method stub
-      return null;
+      IOSWindow window = new IOSWindow(style, primary);
+      if (primary) {
+         primaryStagePeer = window;
+      }
+      return window;
    }
 
    @Override
    public ScenePeer createScenePeer() {
-      // TODO Auto-generated method stub
-      return null;
+      return new IOSScene();
    }
 
    @Override
-   public NodePeer createGroupPeer() {
-      // TODO Auto-generated method stub
-      return null;
+   public GroupPeer createGroupPeer() {
+      return new IOSView();
    }
 
    @Override

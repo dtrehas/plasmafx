@@ -3,14 +3,14 @@ package plasma.scene;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.arkasoft.plasma.ApplicationContext;
-import com.arkasoft.plasma.scene.LayoutFlags;
-import com.arkasoft.plasma.ui.NodePeer;
-
 import plasma.beans.ReadOnlyProperty;
 import plasma.collections.ObservableCollections;
 import plasma.collections.ObservableList;
 import plasma.collections.ObservableListListener;
+
+import com.arkasoft.plasma.ApplicationContext;
+import com.arkasoft.plasma.scene.LayoutFlags;
+import com.arkasoft.plasma.ui.NodePeer;
 
 /**
  * The base class for all nodes that have children in the scene graph.
@@ -92,7 +92,7 @@ public abstract class Parent extends Node {
    }
 
    private void markDirtyLayout(boolean b) {
-      // TODO 
+      // TODO
    }
 
    public final boolean isNeedsLayout() {
@@ -115,10 +115,16 @@ public abstract class Parent extends Node {
       }
       return needsLayout;
    }
-   
+
+   // -------------------------------------------------------------------------
+   //
+   // Methods for synchronizing state from this Node to its _peer.
+   //
+   // -------------------------------------------------------------------------
+
    @Override
-   protected NodePeer _peer_create() {
+   protected NodePeer impl_createPeer() {
       return ApplicationContext.getInstance().createGroupPeer();
    }
-   
+
 }

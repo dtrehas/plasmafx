@@ -9,5 +9,7 @@ public interface StagePeer {
    void setVisible(boolean value);
 
    void close();
+
+   void setScene(ScenePeer scenePeer);
    
 }

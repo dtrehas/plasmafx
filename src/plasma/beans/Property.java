@@ -59,7 +59,7 @@ public abstract class Property<T> extends ReadOnlyProperty<T> implements
 		bindingSupport.bind(adapter, other, dependencies);
 	}
 
-	public void unbound() {
+	public void unbind() {
 		if (isBound()) {
 			bindingSupport.unbind();
 			bindingSupport = null;

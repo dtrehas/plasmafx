@@ -1,5 +1,9 @@
 package com.arkasoft.plasma.ui;
 
-public class NodePeer {
+public interface NodePeer {
+
+   void dispose();
+
+   void release();
 
 }
