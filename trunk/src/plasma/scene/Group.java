@@ -2,8 +2,6 @@ package plasma.scene;
 
 import plasma.collections.ObservableList;
 
-import com.arkasoft.plasma.ui.NodePeer;
-
 /**
  * A {@code Group} node contains an {@link ObservableList} of children that are
  * rendered in order whenever this node is rendered.

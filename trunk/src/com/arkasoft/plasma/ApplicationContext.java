@@ -6,6 +6,7 @@ import plasma.application.Application;
 import plasma.stage.Stage;
 import plasma.stage.StageStyle;
 
+import com.arkasoft.plasma.ui.GroupPeer;
 import com.arkasoft.plasma.ui.NodePeer;
 import com.arkasoft.plasma.ui.ScenePeer;
 import com.arkasoft.plasma.ui.StagePeer;
@@ -57,7 +58,7 @@ public abstract class ApplicationContext {
 
       if (application != null) {
          callApplicationInit();
-         syncExec(new Runnable() {
+         invokeAndWait(new Runnable() {
             @Override
             public void run() {
                try {
@@ -103,6 +104,23 @@ public abstract class ApplicationContext {
          t.printStackTrace();
       }
    }
+   
+   /**
+    * 
+    * @throws IllegalStateException if not on user thread.
+    */
+   public void checkUserThread() {
+      if (!isUserThread()) {
+         throw new IllegalStateException("Not on application thread; currentThread = "
+               + Thread.currentThread().getName());
+      }
+   }
+
+   /**
+    * 
+    * @return {@code true} if the current thread is the application thread.
+    */
+   public abstract boolean isUserThread();
 
    /**
     * Causes the {@code run()} method of the runnable to be invoked by the
@@ -113,7 +131,7 @@ public abstract class ApplicationContext {
     * @param runnable
     *           code to run on the user-interface thread or {@code null}
     */
-   protected abstract void runAsync(final Runnable runnable);
+   protected abstract void invokeLater(final Runnable runnable);
 
    /**
     * Causes the {@code run()} method of the runnable to be invoked by the
@@ -123,7 +141,7 @@ public abstract class ApplicationContext {
     * @param launchable
     *           code to run on the user-interface thread or {@code null}
     */
-   protected abstract void syncExec(Runnable launchable);
+   protected abstract void invokeAndWait(Runnable launchable);
 
    /**
     * 
@@ -143,7 +161,7 @@ public abstract class ApplicationContext {
     * 
     * @return
     */
-   public abstract NodePeer createGroupPeer();
+   public abstract GroupPeer createGroupPeer();
 
    public boolean hasTouch() {
       return false;

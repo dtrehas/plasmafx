@@ -14,6 +14,11 @@ import plasma.event.EventTarget;
 public abstract class Node implements EventTarget/* , Stylable */{
 
    /**
+    * The peer node.
+    */
+   private NodePeer peer;
+
+   /**
     * The parent of this {@code Node}. If this {@code Node} has not been added
     * to the scene graph, then parent will be {@code null}.
     */
@@ -80,7 +85,21 @@ public abstract class Node implements EventTarget/* , Stylable */{
             protected void invalidated() {
                Scene newScene = getValue();
 
+               sceneChanged(newScene, oldScene);
+               // TODO impl_reapplyCSS
+
+               // if (!impl_isDirtyEmpty()) {
                // TODO
+               // }
+
+               if (newScene == null && peer != null) {
+                  peer.release();
+               }
+
+               if (getParent() == null) {
+                  // if we are the root we need to handle scene change
+                  // TODO
+               }
             }
 
             @Override
@@ -91,6 +110,38 @@ public abstract class Node implements EventTarget/* , Stylable */{
       }
 
       return scene;
+   }
+
+   void sceneChanged(Scene newScene, Scene oldScene) {}
+
+   /**
+    * The {@code id} of this {@code Node}.
+    */
+   private Property<String> id;
+
+   public final void setId(String value) {
+      idProperty().setValue(value);
+   }
+
+   public final String getId() {
+      return id == null ? null : id.getValue();
+   }
+
+   public final Property<String> idProperty() {
+      if (id == null) {
+         id = new NodeProperty<String>(null) {
+            @Override
+            protected void invalidated() {
+               // impl_reapplyCSS();
+            }
+
+            @Override
+            public String getName() {
+               return "id";
+            }
+         };
+      }
+      return id;
    }
 
    /**
@@ -107,7 +158,17 @@ public abstract class Node implements EventTarget/* , Stylable */{
          visible = new NodeProperty<Boolean>(false) {
             @Override
             protected void invalidated() {
+               // TODO impl_markDirty()
+               updateTreeVisible();
+               // if (getClip() != null
                // TODO
+               // }
+               if (getParent() != null) {
+                  // notify the parent of the potential change in visibility
+                  // of this node, since visibility affects bounds of the
+                  // parent node
+                  getParent().childVisibilityChanged(Node.this);
+               }
             }
 
             @Override
@@ -118,7 +179,11 @@ public abstract class Node implements EventTarget/* , Stylable */{
       }
       return visible;
    }
-   
+
+   // ----------------------------------------------------------------------
+   // NodeProperty & NodeReadOnlyProperty
+   // ----------------------------------------------------------------------
+
    /**
     * A node property.
     * 
@@ -156,44 +221,44 @@ public abstract class Node implements EventTarget/* , Stylable */{
       }
    }
 
-   // *************************************************************************
-   // *                                                                       *
-   // * Methods for synchronizing state from this Node to its _peer.          *
-   // *                                                                       *
-   // *************************************************************************
-   
-   /**
-    * The peer node.
-    */
-   private NodePeer _peer;
-   
+   // -------------------------------------------------------------------------
+   //
+   // Methods for synchronizing state from this Node to its _peer.
+   //
+   // -------------------------------------------------------------------------
+
    @SuppressWarnings("unchecked")
-   protected final <T extends NodePeer> T _peer_get() {
-      if (_peer == null) {
-         _peer = _peer_create();
+   public final <T extends NodePeer> T impl_getPeer() {
+      if (peer == null) {
+         peer = impl_createPeer();
       }
-      return (T) _peer;
+      return (T) peer;
    }
-   
+
    /**
     * 
     * @return
     */
-   protected abstract NodePeer _peer_create();
+   protected abstract NodePeer impl_createPeer();
 
    /**
     * 
+    * @deprecated This is an internal API that is not intended for use and will
+    *             be removed in the next version
     */
-   protected final void _peer_sync() {
+   protected final void impl_syncPeer() {
       // TODO call impl_updatePeer()
    }
-   
+
    /**
     * 
+    * @deprecated This is an internal API that is not intended for use and will
+    *             be removed in the next version
     */
-   protected void _peer_update() {
-      // TODO Auto-generated method stub
-      
+   protected void impl_updatePeer() {
+      final NodePeer peer = impl_getPeer();
+
+      // TODO
    }
 
 }
