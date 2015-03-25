@@ -1,0 +1,1 @@
+PlasmaFX is a software platform for creating and delivering rich internet applications (RIAs) that can run across a wide variety of devices. The current release has support for mobile and desktop computers.
